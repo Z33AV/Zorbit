@@ -60,7 +60,11 @@ classdef conic
 
         end
 
-        function [r_e, r_p, r_h] = plot2(obj, th1, th2)
+        function [r_e, r_p, r_h] = plot2(obj, th1, th2, id)
+
+             if isempty(id)
+                id = 1;
+            end
 
             th_star = linspace(deg2rad(th1), deg2rad(th2), 1000);
 
@@ -77,8 +81,8 @@ classdef conic
 
 
             %Plotting
-            figure()
-            plot(r_e,r_p, 'r', 'DisplayName','Spacecraft Orbit');
+            figure(id)
+            plot(r_e,r_p, 'DisplayName','Spacecraft Orbit');
             hold on
             %plot([0, 7150],[0, 0], 'g', 'DisplayName', 'r bar');
             hold on
@@ -97,16 +101,20 @@ classdef conic
             legend('location','northwest')
         end
 
-        function sc_pos = plot3(obj, th0, th1, suppress)
+        function sc_pos = plot3(obj, th0, th1, suppress, id)
 
             % PURPOSE: Function to plot a given conic section, two-body orbit in 3D.
             % INPUTS: th0, th1: initial and final true anomaly through which to plot [deg],  suppress: if 1, plots will be suppressed.
+            %id = fig id, will be set to 1 if [] is supplied
             %OUTPUT: length(t) x 3 (X,Y,Z) array of spacecraft position in inertial equatorial Xhat,
             %Yhat, Zhat coordinates
 
             %input cleaning
             th_star = linspace(deg2rad(th0),deg2rad(th1),1000);
-
+            
+            if isempty(id)
+                id = 1;
+            end
 
 
 
@@ -151,9 +159,9 @@ classdef conic
 
             [Ex,Ey,Ez] = sphere(50);
             if suppress ~= 1
-                figure()
+                figure(id)
 
-                plot3(sc_pos(:,1),sc_pos(:,2),sc_pos(:,3), 'r')
+                plot3(sc_pos(:,1),sc_pos(:,2),sc_pos(:,3))
                 hold on
                 quiver3(0,0,0, X_vec_vis,0,0,'g')
                 hold on

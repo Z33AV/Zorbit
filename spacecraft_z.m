@@ -1,6 +1,7 @@
 classdef spacecraft_z
 
     properties
+        
         orbit; %conic object class input - input 0 if orbit elements are not known
         state; %3x2 matrix of [r,v] where r and v are coloumn vectors
         basis; %string indicating which vector basis state vectors are in. Options: 'xyz','rth', 'eph'
@@ -67,7 +68,7 @@ classdef spacecraft_z
             E = acos( ( a - norm(obj.state(:,1)) )/(a*e));
             h  = hbar;
             gamma = acos( norm(obj.h)/( rmag*vmag ) );
-            M = Mfcn(obj.E,e);
+            M = Mfcn(E,e);
 
 
             %obj.orbit = conic(a,e,w,O,i,obj.body) - doesn't work because
@@ -114,12 +115,43 @@ classdef spacecraft_z
         function obj = set.state(obj,new_state)
 
             obj.state = new_state;
+
+        end
+
+        function dT = time_till(obj,TAtarg)
+       
+            M0 = Mfcn(obj.E,obj.orbit.e);
+            t0_tp = M0/obj.orbit.n;
+
+            E1 = spacecraft_z.TA2E(TAtarg, obj.orbit.e);
+            M1 = Mfcn(E1, obj.orbit.e);
+            t1_tp = M1/obj.orbit.n;
+
+            dT = t1_tp-t0_tp;
+        
+        
         end
 
         
 
 
 
+    end
+
+    methods(Static)
+        
+        function E = TA2E(TA,e)
+            E = 2*atan(sqrt( (1-e)/(1+e) )*tan(TA/2));
+        end
+    
+        function TA = E2TA(E,e)
+            TA = 2*atan(sqrt( (1+e)/(1-e) )*tan(E/2));
+        end
+    
+    
+    
+    
+    
     end
 
 
