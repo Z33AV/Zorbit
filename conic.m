@@ -30,8 +30,8 @@ classdef conic
     methods
         function obj = conic(a,e,w,O,i, main_body)
             %bodyDict
-            rDict = dictionary("earth", 6378.14);
-            muDict = dictionary("earth", 398600.4415);
+            rDict = dictionary("earth", 6378.14, "sun",  695990, "venus", 6051.9, 'moon', 1738.2, 'saturn', 60268, 'jupiter',71492 , "titan", 2575);  
+            muDict = dictionary("earth",  398600.4415, "sun", 132712440017.99, "venus", 324858.59882646, 'moon', 4902.8005821478, 'saturn', 37940626.061137, 'jupiter', 126712767.8578000, "titan", 8825);  
             obj.a = a;
             obj.e = e;
             obj.w = w;
@@ -68,8 +68,8 @@ classdef conic
 
             th_star = linspace(deg2rad(th1), deg2rad(th2), 1000);
 
-            %r = (obj.p*ones(1,length(th_star-obj.w)))./(ones(1,length(th_star))+obj.e*cos(th_star-obj.w));
-            r = (obj.p*ones(1,length(th_star)))./(ones(1,length(th_star))+obj.e*cos(th_star));
+            r = (obj.p*ones(1,length(th_star-obj.w)))./(ones(1,length(th_star))+obj.e*cos(th_star-obj.w));
+            %r = (obj.p*ones(1,length(th_star)))./(ones(1,length(th_star))+obj.e*cos(th_star));
             r_e = r.*cos(th_star);
             r_p = r.*sin(th_star);
             r_h = zeros(1,length(th_star));
@@ -88,8 +88,8 @@ classdef conic
             hold on
             %plot([7150, 7150],[0, 8.675*scale], 'r', 'DisplayName','v bar');
             hold on
-            plot(earthX, earthY, 'b', 'DisplayName', 'Body 1');
-            hold on
+            plot(earthX, earthY, 'k', 'DisplayName', 'Body 1');
+           % hold on
 
 
             title("Zvirani 2D-Plot, Orbit Normal" , 'interpreter','latex');
@@ -173,7 +173,7 @@ classdef conic
                 surf(Ex*obj.r1, Ey*obj.r1, Ez*obj.r1)
                 colormap summer
                 shading interp
-                hold on
+                %hold on
                 grid on
                 axis equal
                 title("Spacecraft Orbit", 'interpreter','latex')

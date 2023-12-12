@@ -26,12 +26,12 @@ classdef spacecraft_z
             obj.state = state;
             obj.basis = basis;
             obj.body = body;
-            muDict = dictionary("earth", 398600.4415);
+             muDict = dictionary("earth",  398600.4415, "sun", 132712440017.99, "venus", 324858.59882646, 'moon', 4902.8005821478, 'saturn', 37940626.061137, 'jupiter', 126712767.8578000);  
             obj.mu = muDict(obj.body);
         end
 
 
-        function [a,e,w,O,i,E,h,gamma,M] = kepels(obj)
+        function [a,e,w,O,i,E,h,gamma,M,eps] = kepels(obj)
             %Implementation of Vallado RV2COE Algo9, ASSUMES XYZ basis for now
             %function to determine keplerian elements using state vectors,
             %also calculates current anomalies
@@ -123,7 +123,7 @@ classdef spacecraft_z
             M0 = Mfcn(obj.E,obj.orbit.e);
             t0_tp = M0/obj.orbit.n;
 
-            E1 = spacecraft_z.TA2E(TAtarg, obj.orbit.e);
+            E1 = spacecraft_z.TA2E(TAtarg, obj.orbit.e)
             M1 = Mfcn(E1, obj.orbit.e);
             t1_tp = M1/obj.orbit.n;
 
@@ -142,6 +142,9 @@ classdef spacecraft_z
         
         function E = TA2E(TA,e)
             E = 2*atan(sqrt( (1-e)/(1+e) )*tan(TA/2));
+            if E<0
+                E = pi/2 -E; %issueFlag
+            end
         end
     
         function TA = E2TA(E,e)
